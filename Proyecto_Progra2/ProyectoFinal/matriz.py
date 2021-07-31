@@ -9,6 +9,7 @@ class matriz:
     def __init__(self):
         self.entes = 200
         self.lista = []
+        self.listaCopia = []
     
 
     # Para crear la matriz inicial
@@ -48,6 +49,68 @@ class matriz:
                 if self.lista[i][j] != 0:
                     prueba += 1
         print(prueba)
+        
+    def logica_Siguiente(self):
+        self.listaCopia = self.lista.copy()
+        
+        for i in range(25):
+            for j in range(25):
+                contadorVivos = 0
+                contadorMuertos = 0
+                listaNumeros = [].clear()
+                if self.listaCopia[i][j] != 0:
+                    x = i - 1
+                    y = j - 1
+                    if x >= 0 or y >= 0 :
+                        listaNumeros.append(self.listaCopia[x][y])
+                    x = i - 1
+                    y = j
+                    if x >= 0 or y >= 0 :
+                        listaNumeros.append(self.listaCopia[x][y])
+                        x = i - 1
+                        y = j + 1
+                    if x >= 0 or y >= 0 :
+                        listaNumeros.append(self.listaCopia[x][y])
+                        x = i
+                        y = j - 1
+                    if x >= 0 or y >= 0 :
+                        listaNumeros.append(self.listaCopia[x][y])
+                        x = i
+                        y = j + 1
+                    if x >= 0 or y >= 0 :
+                        listaNumeros.append(self.listaCopia[x][y])
+                        x = i + 1
+                        y = j - 1
+                    if x >= 0 or y >= 0 :
+                        listaNumeros.append(self.listaCopia[x][y])
+                        x = i + 1
+                        y = j
+                    if x >= 0 or y >= 0 :
+                        listaNumeros.append(self.listaCopia[x][y])
+                        x = i + 1
+                        y = j + 1
+                    if x >= 0 or y >= 0 :
+                        listaNumeros.append(self.listaCopia[x][y])
+                for x in listaNumeros:
+                    if listaNumeros[x] == 1 or 2 or 7 or 8:
+                        contadorVivos += 1
+                    elif listaNumeros[x] == 3 or 4 or 5 or 6:
+                        contadorMuertos += 1
+                if contadorVivos >= 3:
+                    pass
+                elif contadorMuertos >= 4:
+                    if self.listaCopia[i][j] == 1:
+                        self.lista[i][j] = 3
+                    elif self.listaCopia[i][j] == 2:
+                        self.lista[i][j] = 4
+                    elif self.listaCopia[i][j] == 7:
+                        self.lista[i][j] = 5
+                    elif self.listaCopia[i][j] == 8:
+                        self.lista[i][j] = 6
+        
+        
+        
+    
     #-----------------------------------------------------------------------------
-    #Ejecutando el codigo como prueba:
+    
 
