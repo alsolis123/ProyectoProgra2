@@ -5,7 +5,7 @@ import matriz
 
 matr = matriz.matriz()
 
-#hola
+# Hola mundo alberto 
 class Interfaz: 
     def __init__(self):
         self.root = Tk.Tk()
