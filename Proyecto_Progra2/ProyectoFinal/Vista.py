@@ -8,6 +8,7 @@ matr = matriz.matriz()
 class Interfaz: 
     def __init__(self):
         self.root = Tk.Tk()
+        self.entries = []
         #self.view = View(self.root)
 
     def ejecutarInicioMatriz(self):
@@ -36,7 +37,19 @@ class Interfaz:
             salida = "-"
         return salida
     
+    def AccionSiguiente(self):
+        matr.logica_Siguiente()
+        for r in range(25):
+            for c in range(25):
+                self.entries[r][c].delete(0,"end")
+                self.entries[r][c].insert(0, '{}'.format(self.NumerosaLetras(matr.lista[r][c])))
+        print("---------------------------------")
+        print("---------------------------------")
     
+    
+    
+        
+        
         
     def menu(self):
         #comentario de prueba
@@ -89,10 +102,13 @@ class Interfaz:
         #
         
         for r in range(25):
+            self.entries.append([])
             for c in range(25):
-                cell = Entry(self.juegos, width=5)
-                cell.grid(row=r, column=c)
-                cell.insert(0, '{}'.format(self.NumerosaLetras(matr.lista[r][c])))
+                self.entries[r].append(Entry(self.juegos, width=5))
+                self.entries[r][c].grid(row=r, column=c)
+                self.entries[r][c].insert(0, '{}'.format(self.NumerosaLetras(matr.lista[r][c])))
+        print("---------------------------------")
+        print("---------------------------------")
                 
         self.juegos.resizable(0,0)
    
@@ -105,7 +121,7 @@ class Interfaz:
         boton = Button(self.juegos,image=self.img3btn1,height=43, width=44,borderwidth=0,command=self.ajuste).place(x=1200,y=10)#Boton Ajustes
         boton = Button(self.juegos,image=self.img3btn2,height=45, width=177,borderwidth=0).place(x=1000,y=100)#Boton Aniquilar  
         boton = Button(self.juegos,image=self.img3btn3,height=45, width=177,borderwidth=0).place(x=1000,y=200)#Boton Enfermar   
-        boton = Button(self.juegos,image=self.img3btn4,height=45, width=177,borderwidth=0).place(x=1000,y=300)#Boton Siguiente 
+        boton = Button(self.juegos,image=self.img3btn4,height=45, width=177,borderwidth=0,command=self.AccionSiguiente).place(x=1000,y=300)#Boton Siguiente 
 
 a=Interfaz()
 a.menu()
