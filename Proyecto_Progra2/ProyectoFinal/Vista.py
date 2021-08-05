@@ -13,7 +13,6 @@ class Interfaz:
 
     def ejecutarInicioMatriz(self):
         matr.crearMatriz()
-        matr.imprimirMatriz()
     
     def NumerosaLetras(self, numero):
         salida = ""
@@ -37,18 +36,25 @@ class Interfaz:
             salida = "-"
         return salida
     
+    # Aqui esta la condicion de los 5 turnos sin nacimiento, pero cuesta demasiado que suceda
+    # Casi imposible, ya que hay muchos nacimientos
     def AccionSiguiente(self):
-        matr.logica_Siguiente()
+        if matr.condicionSiContinua() == True:
+            matr.logica_Siguiente()
+            for r in range(25):
+                for c in range(25):
+                    self.entries[r][c].delete(0,"end")
+                    self.entries[r][c].insert(0, '{}'.format(self.NumerosaLetras(matr.lista[r][c])))
+        elif matr.condicionSiContinua() == False:
+            print("termina el programa") #Aca hay que poner un pop-up
+    
+    
+    def enfermar(self):
+        matr.enfermarEnte()
         for r in range(25):
-            for c in range(25):
-                self.entries[r][c].delete(0,"end")
-                self.entries[r][c].insert(0, '{}'.format(self.NumerosaLetras(matr.lista[r][c])))
-        print("---------------------------------")
-        print("---------------------------------")
-    
-    
-    
-        
+                for c in range(25):
+                    self.entries[r][c].delete(0,"end")
+                    self.entries[r][c].insert(0, '{}'.format(self.NumerosaLetras(matr.lista[r][c])))
         
         
     def menu(self):
@@ -107,8 +113,6 @@ class Interfaz:
                 self.entries[r].append(Entry(self.juegos, width=5))
                 self.entries[r][c].grid(row=r, column=c)
                 self.entries[r][c].insert(0, '{}'.format(self.NumerosaLetras(matr.lista[r][c])))
-        print("---------------------------------")
-        print("---------------------------------")
                 
         self.juegos.resizable(0,0)
    
@@ -120,7 +124,7 @@ class Interfaz:
         
         boton = Button(self.juegos,image=self.img3btn1,height=43, width=44,borderwidth=0,command=self.ajuste).place(x=1200,y=10)#Boton Ajustes
         boton = Button(self.juegos,image=self.img3btn2,height=45, width=177,borderwidth=0).place(x=1000,y=100)#Boton Aniquilar  
-        boton = Button(self.juegos,image=self.img3btn3,height=45, width=177,borderwidth=0).place(x=1000,y=200)#Boton Enfermar   
+        boton = Button(self.juegos,image=self.img3btn3,height=45, width=177,borderwidth=0,command=self.enfermar).place(x=1000,y=200)#Boton Enfermar   
         boton = Button(self.juegos,image=self.img3btn4,height=45, width=177,borderwidth=0,command=self.AccionSiguiente).place(x=1000,y=300)#Boton Siguiente 
 
 a=Interfaz()

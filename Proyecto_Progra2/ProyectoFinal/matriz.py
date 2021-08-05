@@ -1,8 +1,8 @@
+
 import random
-import Entes
+import matricescontadores
 
-entes = Entes.Entes()
-
+mcontadores = matricescontadores.matricescontadores()
 
 class matriz:
 
@@ -15,6 +15,25 @@ class matriz:
         self.contadorMuertos = 0
         self.contadorEnfermos = 0
         self.contadorSanos = 0
+        self.contadorsexo = 0
+        self.condicionNacimiento = True
+        self.contadorNacimientos = 0
+
+    def condicionSiContinua(self):
+        condicion = False
+        if self.condicionNacimiento == True:
+            self.contadorNacimientos += 1
+        elif self.condicionNacimiento == False:
+            self.contadorNacimientos = 0
+            
+        self.condicionNacimiento = False
+        if self.contadorNacimientos == 5:
+            condicion = False
+        else:
+            condicion = True
+        return condicion
+        
+
 
     # Para crear la matriz inicial
     def crearMatriz(self):
@@ -23,6 +42,7 @@ class matriz:
             for j in range(25):
                 self.lista[i].append(0)
         self.rellenarEntes()        
+        mcontadores.crearMatrizReproducir()
         
     #Esto va a rellenar la matriz con los entes aleatorios
     def rellenarEntes(self):                
@@ -38,11 +58,14 @@ class matriz:
                                 self.entes -= 1
                             
     # Esto es para imprimir la matriz, mas adelante se podria eliminar
-    def imprimirMatriz(self):
+    def contadorEntes(self):
+        contador = 0
         for i in range(25):
             for j in range(25):
-                print(self.lista[i][j], end=' ')
-            print()
+                if self.lista[i][j] != 0:
+                    contador += 1
+        print(contador)
+        return contador
         
     def logica_Siguiente(self):
         self.listaCopia = self.lista.copy()
@@ -84,21 +107,33 @@ class matriz:
                     if x >= 0 and y >= 0 and x <= 24 and y <= 24:
                         self.listaNumeros.append(self.listaCopia[x][y])
                         
-                    self.contadorVariable()
+                    self.contadorVariable(i, j)
                     self.cambioVivosMuertos(i, j)
                     self.cambioSanosEnfermos(i, j)
+                    self.condicionEliminarMuertos(i, j)
+                    self.eliminarEntesViejos(i, j)
+                    mcontadores.contarReproduccion(i, j, self.contadorSexoContrario())
+        self.agregarNuevosEntes()
                 
-                
-                
-        self.imprimirMatriz() #esto se tiene que eliminar
         
-       
+    def condicionEliminarMuertos(self, x, y):
+        if self.listaCopia[x][y] == 3 or self.listaCopia[x][y] == 4 or self.listaCopia[x][y] == 5 or self.listaCopia[x][y] == 6:
+            condicion = mcontadores.contarMuertos(x, y)
+            if condicion == True:
+                self.lista[x][y] = 0
+                
+    def eliminarEntesViejos(self, x, y):
+        if self.lista[x][y] != 0:
+            condicion = mcontadores.contadorViejos(x, y)
+            if condicion == True:
+                self.lista[x][y] = 0
     
-    def contadorVariable(self):
+    def contadorVariable(self, x, y):
         self.contadorVivos = 0
         self.contadorMuertos = 0
         self.contadorEnfermos = 0
         self.contadorSanos = 0
+        self.contadorsexo = 0
         for n in self.listaNumeros:
             if n == 1 or n == 2 or n == 7 or n == 8:
                 self.contadorVivos += 1
@@ -107,7 +142,14 @@ class matriz:
             if n == 1 or n == 2 or n == 3 or n == 4:
                 self.contadorSanos += 1
             elif n == 5 or n == 6 or n == 7 or n == 8:
-                self.contadorEnfermos += 1  
+                self.contadorEnfermos += 1
+            if self.listaCopia[x][y] == 1 or self.listaCopia[x][y] == 3 or self.listaCopia[x][y] == 5 or self.listaCopia[x][y] == 7:
+                if n == 2 or n == 4 or n == 6 or n == 8:
+                    self.contadorsexo += 1
+            if self.listaCopia[x][y] == 2 or self.listaCopia[x][y] == 4 or self.listaCopia[x][y] == 6 or self.listaCopia[x][y] == 8:
+                if n == 1 or n == 3 or n == 5 or n == 7:
+                    self.contadorsexo += 1
+                    
         self.listaNumeros.clear()
     
     def cambioVivosMuertos(self, i, j):
@@ -144,6 +186,62 @@ class matriz:
                 self.lista[i][j] = 5
             elif self.lista[i][j] == 4:
                 self.lista[i][j] = 6
+
+    def contadorSexoContrario(self):
+        if self.contadorsexo >= 1:
+            self.condicionNacimiento = True
+            return True
+        else:
+            
+            return False
+        
+        
+    def insertarEnteAleatorio(self):
+        condicion = False
+        ente = random.randint(1,8)
+        contador = 0
+        if self.contadorEntes() > 400 and self.contadorEntes() < 625:
+            for x in range(25):
+                for y in range(25):
+                    if self.lista[x][y] == 0 and contador <= 0:
+                        contador += 1
+                        self.lista[x][y] = ente
+                        
+        elif self.contadorEntes() <= 400:
+            condicion = False
+            while condicion == False:
+                aleatorioX = random.randint(0, 24)
+                aleatorioY = random.randint(0, 24)
+                if self.lista[aleatorioX][aleatorioY] == 0:
+                    condicion = True
+                    self.lista[aleatorioX][aleatorioY] = ente
+                
+    def agregarNuevosEntes(self):
+        contador = mcontadores.contadorAleatorios()
+        for x in range (contador):
+            self.insertarEnteAleatorio()
+            
+    # Logica para enfermar un Ente de manera aleatoria
+    def enfermarEnte(self):
+        condicion = False
+        while condicion == False:
+            aleatorioX = random.randint(0, 24)
+            aleatorioY = random.randint(0, 24)
+            if self.lista[aleatorioX][aleatorioY] != 0:
+                if self.lista[aleatorioX][aleatorioY] == 1:
+                    condicion = True
+                    self.lista[aleatorioX][aleatorioY] = 7
+                elif self.lista[aleatorioX][aleatorioY] == 2:
+                    condicion = True
+                    self.lista[aleatorioX][aleatorioY] = 8
+                elif self.lista[aleatorioX][aleatorioY] == 3:
+                    condicion = True
+                    self.lista[aleatorioX][aleatorioY] = 5
+                elif self.lista[aleatorioX][aleatorioY] == 4:
+                    condicion = True
+                    self.lista[aleatorioX][aleatorioY] = 6
+                
+        
     #-----------------------------------------------------------------------------
     
 
