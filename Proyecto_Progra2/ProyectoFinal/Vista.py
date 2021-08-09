@@ -2,6 +2,7 @@ from tkinter import *
 import tkinter as Tk
 import tkinter as ttk
 import matriz
+from tkinter import messagebox 
 
 matr = matriz.matriz()
 
@@ -46,8 +47,9 @@ class Interfaz:
                     self.entries[r][c].delete(0,"end")
                     self.entries[r][c].insert(0, '{}'.format(self.NumerosaLetras(matr.lista[r][c])))
         elif matr.condicionSiContinua() == False:
-            print("termina el programa") #Aca hay que poner un pop-up
-    
+            resultado = messagebox.showinfo("Juego", "Juego terminado") #Aca hay que poner un pop-up
+            if resultado == "Ok":
+                self.root.destroy()
     
     def enfermar(self):
         matr.enfermarEnte()
@@ -94,7 +96,10 @@ class Interfaz:
         self.Brillo = Scale(self.ajustes,from_=0,to=100, orient=HORIZONTAL,length=250).place(x=200,y=130)
         self.volumen = Scale(self.ajustes,from_=0,to=100, orient=HORIZONTAL,length=250).place(x=200,y=220)
         
-
+    def aniquilar(self):
+        resultado = messagebox.askquestion("Aniquilar", "¿Desea detener el juego?")   
+        if resultado == "yes":
+            self.root.destroy()
 
     def juego(self):
         ##Juego
@@ -123,9 +128,9 @@ class Interfaz:
         self.img3btn4= PhotoImage(file="Proyecto_Progra2\ProyectoFinal\Imagenes\Siguiente.png")
         
         boton = Button(self.juegos,image=self.img3btn1,height=43, width=44,borderwidth=0,command=self.ajuste).place(x=850,y=10)#Boton Ajustes
-        boton = Button(self.juegos,image=self.img3btn2,height=41, width=141,borderwidth=0).place(x=1000,y=100)#Boton Aniquilar  
-        boton = Button(self.juegos,image=self.img3btn3,height=41, width=141,borderwidth=0,command=self.enfermar).place(x=1000,y=200)#Boton Enfermar   
-        boton = Button(self.juegos,image=self.img3btn4,height=41, width=141,borderwidth=0,command=self.AccionSiguiente).place(x=1000,y=300)#Boton Siguiente 
+        boton = Button(self.juegos,image=self.img3btn2,height=41, width=141,borderwidth=0, command=self.aniquilar).place(x=1010,y=110)#Boton Aniquilar  
+        boton = Button(self.juegos,image=self.img3btn3,height=41, width=141,borderwidth=0,command=self.enfermar).place(x=1010,y=210)#Boton Enfermar   
+        boton = Button(self.juegos,image=self.img3btn4,height=41, width=141,borderwidth=0,command=self.AccionSiguiente).place(x=1010,y=310)#Boton Siguiente 
 
 a=Interfaz()
 a.menu()
