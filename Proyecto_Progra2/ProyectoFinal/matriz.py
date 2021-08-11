@@ -19,6 +19,9 @@ class matriz:
         self.condicionNacimiento = True
         self.contadorNacimientos = 0
 
+    #Esto basicamente va a ir a consultar si hay nuevos nacimientos, 
+    #Si por 5 turnos no hay nacimiento entonces arrojara un booleano a la principal 
+    #para detener la ejecucion
     def condicionSiContinua(self):
         condicion = False
         if self.condicionNacimiento == True:
@@ -72,7 +75,7 @@ class matriz:
         
         for i in range(25):
             for j in range(25):
-                
+                #Esta es toda la rama de consulta para saber que tienen alrededor
                 if self.listaCopia[i][j] != 0:
                     x = i - 1
                     y = j - 1
@@ -115,19 +118,24 @@ class matriz:
                     mcontadores.contarReproduccion(i, j, self.contadorSexoContrario())
         self.agregarNuevosEntes()
                 
-        
+    #Este es como el de eliminar entes viejos, va a eliminar cuando se cumpla la condicion del contador
+    #Este consulta las matrices contadores    
     def condicionEliminarMuertos(self, x, y):
         if self.listaCopia[x][y] == 3 or self.listaCopia[x][y] == 4 or self.listaCopia[x][y] == 5 or self.listaCopia[x][y] == 6:
             condicion = mcontadores.contarMuertos(x, y)
             if condicion == True:
                 self.lista[x][y] = 0
-                
+    
+    #Este va a eliminar los entes viejos a menos que cambien
+    #Si cambia a uno vivo por alguna razon entonces el valor del contador
+    #pasara a ser 0            
     def eliminarEntesViejos(self, x, y):
         if self.lista[x][y] != 0:
             condicion = mcontadores.contadorViejos(x, y)
             if condicion == True:
                 self.lista[x][y] = 0
-    
+                
+    #Estos son los contadores individuales de uno en uno
     def contadorVariable(self, x, y):
         self.contadorVivos = 0
         self.contadorMuertos = 0
@@ -152,6 +160,7 @@ class matriz:
                     
         self.listaNumeros.clear()
     
+    #Este metodo y el de abajo van a efectuar los cambios en la matriz principal
     def cambioVivosMuertos(self, i, j):
         if self.contadorVivos >= 3:
                     pass
@@ -165,7 +174,7 @@ class matriz:
             elif self.listaCopia[i][j] == 8:
                 self.lista[i][j] = 6
                         
-        
+    #Este metodo y el de arriba van a efectuar los cambios en la matriz principal    
     def cambioSanosEnfermos(self, i, j):
         if self.contadorSanos >= 6:
             if self.lista[i][j] == 7:
@@ -186,7 +195,9 @@ class matriz:
                 self.lista[i][j] = 5
             elif self.lista[i][j] == 4:
                 self.lista[i][j] = 6
-
+                
+                
+    #Esta es la condicion que pasa como parametro arriba para el contador de reproduccion
     def contadorSexoContrario(self):
         if self.contadorsexo >= 1:
             self.condicionNacimiento = True
@@ -195,7 +206,7 @@ class matriz:
             
             return False
         
-        
+    #Aqui es donde principalmente se van a insertar los entes aleatorios    
     def insertarEnteAleatorio(self):
         condicion = False
         ente = random.randint(1,8)
@@ -206,7 +217,8 @@ class matriz:
                     if self.lista[x][y] == 0 and contador <= 0:
                         contador += 1
                         self.lista[x][y] = ente
-                        
+        #Una vez que se llega a 400 la formula le cuesta encontrar lugares 
+        # y sobre carga el codigo por es despues de eso va a ir agregando en orden                
         elif self.contadorEntes() <= 400:
             condicion = False
             while condicion == False:
@@ -215,7 +227,9 @@ class matriz:
                 if self.lista[aleatorioX][aleatorioY] == 0:
                     condicion = True
                     self.lista[aleatorioX][aleatorioY] = ente
-                
+                    
+    #Esto va a ir a la matriz que verifica si se pueden agregar nuevos entes
+    #o sea que hay hombre y mujer juntos y va a agregar todos aquellos entes nuevos    
     def agregarNuevosEntes(self):
         contador = mcontadores.contadorAleatorios()
         for x in range (contador):
@@ -224,6 +238,7 @@ class matriz:
     # Logica para enfermar un Ente de manera aleatoria
     def enfermarEnte(self):
         condicion = False
+        #Esta condicion se rompera cuando encuentre un ente para enfermar
         while condicion == False:
             aleatorioX = random.randint(0, 24)
             aleatorioY = random.randint(0, 24)

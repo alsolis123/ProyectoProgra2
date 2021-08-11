@@ -10,7 +10,6 @@ class Interfaz:
     def __init__(self):
         self.root = Tk.Tk()
         self.entries = []
-        #self.view = View(self.root)
 
     def ejecutarInicioMatriz(self):
         matr.crearMatriz()
@@ -44,6 +43,7 @@ class Interfaz:
             matr.logica_Siguiente()
             for r in range(25):
                 for c in range(25):
+                    #recorrer matriz de entes antes creada
                     self.entries[r][c].delete(0,"end")
                     self.entries[r][c].insert(0, '{}'.format(self.NumerosaLetras(matr.lista[r][c])))
         elif matr.condicionSiContinua() == False:
@@ -52,6 +52,7 @@ class Interfaz:
                 self.root.destroy()
     
     def enfermar(self):
+        #ultimo metodo de matriz, que busca aleatoriamente uno nuevo para enfermar
         matr.enfermarEnte()
         for r in range(25):
                 for c in range(25):
